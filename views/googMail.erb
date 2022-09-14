@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>URI</title>
+<link rel="icon" href="data:,">
+</head>
+<body>
+<h1>Here</h1><br>
+<%if !@gresp.nil? %>
+<%= @gresp %>
+<% else %>
+<h4> Label </h4>
+<% @result.labels.each do |label|  %>
+   <%= "- #{label.name}<br>" %>
+   <% end %>
+<% end %>
+</body>
+</html>
