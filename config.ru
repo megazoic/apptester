@@ -1,4 +1,4 @@
 # config.ru (run with rackup)
-require './qscli2.rb'
+require './qscli.rb'
 run QsCli
 

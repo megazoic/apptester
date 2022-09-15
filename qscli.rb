@@ -27,8 +27,18 @@ class QsCli < Sinatra::Base
   def authorize
     credentials
   end
-
+  get '/sorry' do
+    @say = "Sorry"
+    erb :index, :layout => :layout
+  end
+  get '/hello' do
+    @say = "Hi"
+    erb :index, :layout => :layout
+  end
   get '/mail' do
+    if params['secret'] != ENV.fetch("APP_SECRET")
+      redirect "/sorry", 303
+    end
     # Initialize the API
     service = Google::Apis::GmailV1::GmailService.new
     service.client_options.application_name = APPLICATION_NAME
@@ -55,7 +65,7 @@ class QsCli < Sinatra::Base
       #puts "No labels found" if result.labels.empty?
       #result.labels.each { |label| puts "- #{label.name}" }
     end
-    erb :googMail
+    erb :googMail, :layout => :layout
   end
   #give service a place to land
   get '/oauth2callback' do
@@ -77,6 +87,6 @@ class QsCli < Sinatra::Base
     #puts "Labels:"
     #puts "No labels found" if result.labels.empty?
     #result.labels.each { |label| puts "- #{label.name}" }
-    erb :googMail
+    erb :googMail, :layout => :layout
   end
 end
