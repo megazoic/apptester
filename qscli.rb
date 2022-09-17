@@ -3,20 +3,24 @@ require "googleauth"
 require "googleauth/stores/file_token_store"
 require "fileutils"
 require 'sinatra/base'
+require 'mail'
 #require 'net/http'
 
 #set :port, 9292
 
 class QsCli < Sinatra::Base
+  #adjust as needed
   #OOB_URI = "urn:ietf:wg:oauth:2.0:oob".freeze
   OOB_URI = "http://localhost:9292/oauth2callback"
+  #OOB_URI = "https://technomena.com/oauth2callback"
   APPLICATION_NAME = "Gmail API Ruby Quickstart".freeze
   CREDENTIALS_PATH = "credentials.json".freeze
   # The file token.yaml stores the user's access and refresh tokens, and is
   # created automatically when the authorization flow completes for the first
   # time.
   TOKEN_PATH = "token.yaml".freeze
-  SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
+  #SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
+  SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_SEND
 
   ##
   # Ensure valid credentials, either by restoring from the saved credentials
@@ -24,9 +28,6 @@ class QsCli < Sinatra::Base
   # the user's default browser will be launched to approve the request.
   #
   # @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
-  def authorize
-    credentials
-  end
   get '/sorry' do
     @say = "Sorry"
     erb :index, :layout => :layout
