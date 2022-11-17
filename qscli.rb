@@ -36,6 +36,13 @@ class QsCli < Sinatra::Base
     @say = "Hi"
     erb :index, :layout => :layout
   end
+  get '/amin/:secret' do
+    if params['secret'] != ENV.fetch("APP_SECRET")
+      redirect "/sorry", 303
+    end
+    @say = "Yes"
+    erb :index, :layout => :layout
+  end
   get '/mail' do
     if params['secret'] != ENV.fetch("APP_SECRET")
       redirect "/sorry", 303
@@ -65,13 +72,19 @@ class QsCli < Sinatra::Base
       message              = Mail.new
       message.date         = Time.now
       message.subject      = 'Supertram p'
-      message.body         = "<p>Hi Nick, how's life?</p>"
+      message.body         = "<p>Hey Dude, how's life?</p>"
       message.content_type = 'text/html'
-      message.from         = 'membership@w7lt.org'
-      message.to           = 'megazoic@gmail.com'
+      message.from         = ENV.fetch("MSG_FROM")
+      message.to           = ENV.fetch("MSG_TO")
       msg = message.encoded
       message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
-      service.send_user_message(user_id, message_object)
+      begin
+        rsult = service.send_user_message(user_id, message_object)
+        puts "result is: #{rsult}"
+      rescue ArgumentError => e
+        puts "error:"
+        puts e.message
+      end
     end
     erb :googMail, :layout => :layout
   end
