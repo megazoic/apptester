@@ -2,8 +2,4 @@
 <%if !@gresp.nil? %>
 <%= @gresp %>
 <% else %>
-<h4> Label </h4>
-<% @result.labels.each do |label|  %>
-   <%= "- #{label.name}<br>" %>
-   <% end %>
-<% end %>
+<h4> No Result </h4>

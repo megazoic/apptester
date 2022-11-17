@@ -11,8 +11,8 @@ require 'mail'
 class QsCli < Sinatra::Base
   #adjust as needed
   #OOB_URI = "urn:ietf:wg:oauth:2.0:oob".freeze
-  OOB_URI = "http://localhost:9292/oauth2callback"
-  #OOB_URI = "https://technomena.com/oauth2callback"
+  #OOB_URI = "http://localhost:9292/oauth2callback"
+  OOB_URI = "https://technomena.com/oauth2callback"
   APPLICATION_NAME = "Gmail API Ruby Quickstart".freeze
   CREDENTIALS_PATH = "credentials.json".freeze
   # The file token.yaml stores the user's access and refresh tokens, and is
@@ -43,7 +43,7 @@ class QsCli < Sinatra::Base
     @say = "Yes"
     erb :index, :layout => :layout
   end
-  get '/mail' do
+  get '/mail/:secret' do
     if params['secret'] != ENV.fetch("APP_SECRET")
       redirect "/sorry", 303
     end
@@ -79,8 +79,8 @@ class QsCli < Sinatra::Base
       msg = message.encoded
       message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
       begin
-        rsult = service.send_user_message(user_id, message_object)
-        puts "result is: #{rsult}"
+        @gresp = service.send_user_message(user_id, message_object)
+        puts "from legit result is: #{gresp.raw}"
       rescue ArgumentError => e
         puts "error:"
         puts e.message
@@ -110,11 +110,17 @@ class QsCli < Sinatra::Base
     message.subject      = 'Supertram p'
     message.body         = "<p>Hi Nick, how's life?</p>"
     message.content_type = 'text/html'
-    message.from         = 'membership@w7lt.org'
-    message.to           = 'megazoic@gmail.com'
+    message.from         = ENV.fetch("MSG_FROM")
+    message.to           = ENV.fetch("MSG_TO")
     msg = message.encoded
     message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
-    service.send_user_message(user_id, message_object)
+    begin
+      @gresp = service.send_user_message(user_id, message_object)
+      puts "from oauth result is: #{gresp.raw}"
+    rescue ArgumentError => e
+      puts "error:"
+      puts e.message
+    end
     erb :googMail, :layout => :layout
   end
 end
