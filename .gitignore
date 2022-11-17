@@ -2,3 +2,5 @@ credentials.json
 token.yaml
 ghaccesstkn.txt
 env_vars
+ignore/*
+.DS_Store

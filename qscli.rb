@@ -61,10 +61,17 @@ class QsCli < Sinatra::Base
       puts "have legit creds"
       # Show the user's labels
       user_id = "me"
-      @result = service.list_user_labels user_id
-      #puts "Labels:"
-      #puts "No labels found" if result.labels.empty?
-      #result.labels.each { |label| puts "- #{label.name}" }
+      #@result = service.list_user_labels user_id
+      message              = Mail.new
+      message.date         = Time.now
+      message.subject      = 'Supertram p'
+      message.body         = "<p>Hi Nick, how's life?</p>"
+      message.content_type = 'text/html'
+      message.from         = 'membership@w7lt.org'
+      message.to           = 'megazoic@gmail.com'
+      msg = message.encoded
+      message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
+      service.send_user_message(user_id, message_object)
     end
     erb :googMail, :layout => :layout
   end
@@ -84,10 +91,17 @@ class QsCli < Sinatra::Base
     service.authorization = credentials
     # Show the user's labels
     user_id = "me"
-    @result = service.list_user_labels user_id
-    #puts "Labels:"
-    #puts "No labels found" if result.labels.empty?
-    #result.labels.each { |label| puts "- #{label.name}" }
+    #@result = service.list_user_labels user_id
+    message              = Mail.new
+    message.date         = Time.now
+    message.subject      = 'Supertram p'
+    message.body         = "<p>Hi Nick, how's life?</p>"
+    message.content_type = 'text/html'
+    message.from         = 'membership@w7lt.org'
+    message.to           = 'megazoic@gmail.com'
+    msg = message.encoded
+    message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
+    service.send_user_message(user_id, message_object)
     erb :googMail, :layout => :layout
   end
 end
