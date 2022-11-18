@@ -80,7 +80,7 @@ class QsCli < Sinatra::Base
       message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
       begin
         @gresp = service.send_user_message(user_id, message_object)
-        puts "from legit result is: #{@gresp.id}"
+        puts "from legit result is: #{@gresp.to_json}"
       rescue ArgumentError => e
         puts "error:"
         puts e.message
@@ -116,7 +116,7 @@ class QsCli < Sinatra::Base
     message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s)
     begin
       @gresp = service.send_user_message(user_id, message_object)
-      puts "from oauth result is: #{@gresp.id}"
+      puts "from oauth result is: #{@gresp.to_json}"
     rescue ArgumentError => e
       puts "error:"
       puts e.message
